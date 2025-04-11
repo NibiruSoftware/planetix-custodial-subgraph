@@ -1,6 +1,13 @@
+type Account @entity {
+  id: Bytes! # the address
+  deposits: [Deposited!]! @derivedFrom(field: "depositor")
+  withdrawRequests: [WithdrawRequested!]! @derivedFrom(field: "withdrawer")
+  withdrawals: [Withdrawn!]! @derivedFrom(field: "withdrawer")
+}
+
 type Deposited @entity(immutable: true) {
   id: Bytes!
-  depositor: Bytes! # address
+  depositor: Account! # address
   amount: BigInt! # uint256
   timestamp: BigInt! # uint256
   nonce: BigInt! # uint256
@@ -9,34 +16,9 @@ type Deposited @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type OwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Paused @entity(immutable: true) {
-  id: Bytes!
-  account: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Unpaused @entity(immutable: true) {
-  id: Bytes!
-  account: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
 type WithdrawRequested @entity(immutable: true) {
   id: Bytes!
-  withdrawer: Bytes! # address
+  withdrawer: Account! # address
   amount: BigInt! # uint256
   timestamp: BigInt! # uint256
   nonce: BigInt! # uint256
@@ -47,7 +29,7 @@ type WithdrawRequested @entity(immutable: true) {
 
 type Withdrawn @entity(immutable: true) {
   id: Bytes!
-  withdrawer: Bytes! # address
+  withdrawer: Account! # address
   amount: BigInt! # uint256
   timestamp: BigInt! # uint256
   nonce: BigInt! # uint256
